@@ -12,6 +12,14 @@ var Player = enchant.Class.create(enchant.Sprite, {
                 function(e){ player.y = e.y; game.touched = false; });
         game.rootScene.addEventListener('touchmove',
                 function(e){ player.y = e.y; });
+        
+          game.rootScene.addEventListener('touchstart',
+                function(e){ player.x = e.x; game.touched = true; });
+        game.rootScene.addEventListener('touchend',
+                function(e){ player.x = e.x; game.touched = false; });
+        game.rootScene.addEventListener('touchmove',
+                function(e){ player.x = e.x; });
+        
         this.addEventListener('enterframe', function(){
             if(game.touched && game.frame % 3 == 0){     //3フレームに一回、自動的に撃つ
                      var s = new PlayerShoot(this.x, this.y); }
@@ -19,12 +27,43 @@ var Player = enchant.Class.create(enchant.Sprite, {
         game.rootScene.addChild(this);
     }
 });
-//敵のクラス
+//敵のクラス(倒せない)
 var Enemy = enchant.Class.create(enchant.Sprite, {
     initialize: function(x, y, omega){
         enchant.Sprite.call(this, 16, 16);
         this.image = game.assets['graphic.png'];
         this.x = x; this.y = y; this.frame = 3; this.time = 0;
+       
+          this.omega = omega*Math.PI / 180; //ラジアン角に変換
+          this.direction = 0; this.moveSpeed = 4;
+
+          //敵の動きを定義する
+        this.addEventListener('enterframe', function(){
+            this.direction += this.omega;
+            this.x -= this.moveSpeed ;
+           
+
+               //画面外に出たら消える
+            if(this.y > 320 || this.x > 320 || this.x < -this.width || this.y < -this.height){
+                this.remove();
+            
+            }
+        });
+        game.rootScene.addChild(this);
+    },
+    remove: function(){
+        game.rootScene.removeChild(this);
+        delete enemies[this.key]; delete this;
+    }
+});
+
+//敵のクラス（倒せる）
+
+var Enemy2 = enchant.Class.create(enchant.Sprite, {
+    initialize: function(x, y, omega){
+        enchant.Sprite.call(this, 16, 16);
+        this.image = game.assets['graphic.png'];
+        this.x = x; this.y = y; this.frame = 6; this.time = 0;
        
           this.omega = omega*Math.PI / 180; //ラジアン角に変換
           this.direction = 0; this.moveSpeed = 3;
@@ -49,6 +88,8 @@ var Enemy = enchant.Class.create(enchant.Sprite, {
         delete enemies[this.key]; delete this;
     }
 });
+
+
 //弾のクラス
 var Shoot = enchant.Class.create(enchant.Sprite, {
     initialize: function(x, y, direction){
@@ -113,6 +154,7 @@ window.onload = function() {
                 var y = rand(320);
                 var omega = y < 160 ? 1 : -1;
                 var enemy = new Enemy(320, y, omega);
+                var enemy = new Enemy2(320, y, omega);
                 enemy.key = game.frame;
                     enemies[game.frame] = enemy;
             }
