@@ -30,9 +30,9 @@ var Player = enchant.Class.create(enchant.Sprite, {
 //敵のクラス(倒せない)
 var Enemy = enchant.Class.create(enchant.Sprite, {
     initialize: function(x, y, omega){
-        enchant.Sprite.call(this, 64, 64);
-        this.image = game.assets['space1.png'];
-        this.x = x; this.y = y; this.frame = 0; this.time = 0;
+        enchant.Sprite.call(this, 16, 16);
+        this.image = game.assets['graphic.png'];
+        this.x = x; this.y = y; this.frame = 3; this.time = 0;
        
           this.omega = omega*Math.PI / 180; //ラジアン角に変換
           this.direction = 0; this.moveSpeed = 4;
@@ -50,7 +50,7 @@ var Enemy = enchant.Class.create(enchant.Sprite, {
             }
             
               //自機への当たり判定
-            if(player.within(this, 20)){     //プレイヤーに当たったらゲームオーバー
+            if(player.within(this, 8)){     //プレイヤーに当たったらゲームオーバー
                      game.end(game.score, "SCORE: " + game.score)
                 }
         });
@@ -149,32 +149,11 @@ var EnemyShoot = enchant.Class.create(Shoot, { //弾のクラスを継承
     }
 });
 
-//背景クラス
-var Background = enchant.Class.create(enchant.Sprite,{
-    initialize: function(){
-        //ちょっと大きめの背景を用意する
-        enchant.Sprite.call(this,640,340);
-        this.x=0;
-        this.y=0;
-        this.image=game.assets['bg.png'];
-        this.addEventListener('enterframe',function(){
-            
-            //背景をスクロール
-            this.x--;
-            //端まで来たら背景を巻き戻すを繰り返し
-            if(this.x<=-320)this.x=0;
-        });
-        game.rootScene.addChild(this);
-    }
-});
-
-
 window.onload = function() {
      //初期設定
     game = new Game(320, 320);
-    game.fps = 24; game.score = 0; game.touched = false; game.preload('graphic.png','bg.png','space1.png');
+    game.fps = 24; game.score = 0; game.touched = false; game.preload('graphic.png');
     game.onload = function() {
-        background=new Background();//背景を出現させる
         player = new Player(0, 152);//プレイヤーを出現させる
         enemies = [];
         game.rootScene.backgroundColor = 'black';
