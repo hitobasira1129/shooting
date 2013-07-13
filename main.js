@@ -48,13 +48,20 @@ var Enemy = enchant.Class.create(enchant.Sprite, {
                 this.remove();
             
             }
+            
+              //自機への当たり判定
+            if(player.within(this, 8)){     //プレイヤーに当たったらゲームオーバー
+                     game.end(game.score, "SCORE: " + game.score)
+                }
         });
+        
         game.rootScene.addChild(this);
     },
     remove: function(){
         game.rootScene.removeChild(this);
         delete enemies[this.key]; delete this;
     }
+     
 });
 
 //敵のクラス（倒せる）
@@ -77,9 +84,13 @@ var Enemy2 = enchant.Class.create(enchant.Sprite, {
                //画面外に出たら消える
             if(this.y > 320 || this.x > 320 || this.x < -this.width || this.y < -this.height){
                 this.remove();
-            }else if(this.time++ % 10 == 0){ //10フレームに一回、撃つ
+            }else if(this.time++ % 100 == 10){ //10フレームに一回、撃つ
                 var s = new EnemyShoot(this.x, this.y);
             }
+                //自機への当たり判定
+            if(player.within(this, 8)){     //プレイヤーに当たったらゲームオーバー
+                     game.end(game.score, "SCORE: " + game.score)
+                }
         });
         game.rootScene.addChild(this);
     },
