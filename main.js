@@ -96,7 +96,7 @@ var Enemy = enchant.Class.create(enchant.Sprite, {
 var Enemy2 = enchant.Class.create(enchant.Sprite, {
     initialize: function(x, y, omega){
         enchant.Sprite.call(this, 16, 16);
-        this.image = game.assets['graphic.png'];
+        this.image = game.assets['enmey.png'];
         this.x = x; this.y = y; this.frame = 6; this.time = 0;
        
           this.omega = omega*Math.PI / 180; //ラジアン角に変換
@@ -134,8 +134,8 @@ var Enemy2 = enchant.Class.create(enchant.Sprite, {
 var Shoot = enchant.Class.create(enchant.Sprite, {
     initialize: function(x, y, direction){
         enchant.Sprite.call(this, 16, 16);
-        this.image = game.assets['graphic.png'];
-        this.x = x; this.y = y; this.frame = 1;
+        this.image = game.assets['icon0.gif'];
+        this.x = x; this.y = y; this.frame = 54;
         this.direction = direction; this.moveSpeed = 10;
         this.addEventListener('enterframe', function(){ //弾は決められた方向にまっすぐ飛ぶ
             this.x += this.moveSpeed * Math.cos(this.direction);
@@ -182,6 +182,8 @@ var PlayerShoot = enchant.Class.create(Shoot, { //弾のクラスを継承
 var EnemyShoot = enchant.Class.create(Shoot, { //弾のクラスを継承
     initialize: function(x, y){
         Shoot.call(this, x, y, Math.PI);
+        this.image = game.assets['icon0.gif'];
+        this.x = x; this.y = y; this.frame = 58;
         this.addEventListener('enterframe', function(){
             if(player.within(this, 8)){     //プレイヤーに弾が当たったらゲームオーバー
                      game.end(game.score, "SCORE: " + game.score)
@@ -219,7 +221,7 @@ var Background = enchant.Class.create(enchant.Sprite,{
 window.onload = function() {
      //初期設定
     game = new Game(320, 320);
-    game.fps = 24; game.score = 0; game.touched = false; game.preload('graphic.png','bg.png','space2.gif','jiki.png');
+    game.fps = 24; game.score = 0; game.touched = false; game.preload('enmey.png','bg.png','space2.gif','jiki.png','icon0.gif');
     game.onload = function() {
         background=new Background();//背景を出現させる
         player = new Player(0, 152);//プレイヤーを出現させる
