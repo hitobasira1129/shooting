@@ -27,6 +27,31 @@ var Player = enchant.Class.create(enchant.Sprite, {
         game.rootScene.addChild(this);
     }
 });
+
+//爆発エフェクト
+var Blast=enchant.Class.create(enchant.Sprite,{
+    initialize: function(x,y){
+        enchant.Sprite.call(this,16,16);
+        this.x=x;   this.y=y;
+        this.image=game.assets['effect0.gif'];
+        this.time=0;
+        //アニメーションの遅れ
+        this.duration=20;
+        this.frame=0;
+        
+        this.addEventListener('enterframe',function(){
+            this.time++;
+            //爆発アニメーション
+            this.frame=Math.floor(this.time/this.duration*5);
+            if(this.time==this.duration)this.remove();
+        });
+        game.rootScene.addChild(this);
+    },
+    remove: function(){
+        game.rootScene.removeChild(this);
+    }
+});
+
 //敵のクラス(倒せない)
 var Enemy = enchant.Class.create(enchant.Sprite, {
     initialize: function(x, y, omega){
@@ -52,6 +77,8 @@ var Enemy = enchant.Class.create(enchant.Sprite, {
               //自機への当たり判定
             if(player.within(this, 22)){     //プレイヤーに当たったらゲームオーバー
                      game.end(game.score, "SCORE: " + game.score)
+                      //爆発させる
+                    var blast=new Blast(player.x,player.y);
                 }
         });
         
@@ -90,6 +117,8 @@ var Enemy2 = enchant.Class.create(enchant.Sprite, {
                 //自機への当たり判定
             if(player.within(this, 8)){     //プレイヤーに当たったらゲームオーバー
                      game.end(game.score, "SCORE: " + game.score)
+                      //爆発させる
+                    var blast=new Blast(this.x,this.y);
                 }
         });
         game.rootScene.addChild(this);
@@ -128,6 +157,8 @@ var PlayerShoot = enchant.Class.create(Shoot, { //弾のクラスを継承
             // 自機の弾が敵機に当たったかどうかの判定
             for(var i in enemies){
                 if(enemies[i].intersect(this)){
+                    //爆発させる
+                    var blast=new Blast(enemies[i].x,enemies[i].y)
                     //当たっていたら敵を消去
                     this.remove(); enemies[i].remove();
                     game.score += 100; //スコアを加算
@@ -144,7 +175,13 @@ var EnemyShoot = enchant.Class.create(Shoot, { //弾のクラスを継承
         this.addEventListener('enterframe', function(){
             if(player.within(this, 8)){     //プレイヤーに弾が当たったらゲームオーバー
                      game.end(game.score, "SCORE: " + game.score)
-                }
+                    //爆発させる
+                    var blast=new Blast(this.x,this.y);
+                //当たっていたら敵を消去
+                    this.remove(); player.remove();
+                    }
+               
+            
         });
     }
 });
@@ -160,7 +197,7 @@ var Background = enchant.Class.create(enchant.Sprite,{
         this.addEventListener('enterframe',function(){
             
             //背景をスクロール
-            this.x--;
+            this.x-=0.5;
             //端まで来たら背景を巻き戻すを繰り返し
             if(this.x<=-320)this.x=0;
         });
