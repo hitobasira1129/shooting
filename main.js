@@ -10,7 +10,7 @@ var Player = enchant.Class.create(enchant.Sprite, {
                 function(e){ player.y = e.y; game.touched = true; });
         game.rootScene.addEventListener('touchend',
                 function(e){ player.y = e.y; game.touched = false; });
-        game.rootScene.addEventListener('touchmove',
+        game.rootScene.addEventListener('touchmove', 
                 function(e){ player.y = e.y; });
         
           game.rootScene.addEventListener('touchstart',
