@@ -1,16 +1,16 @@
 enchant();
-//自機のクラス
+//自機のクラス 
 var Player = enchant.Class.create(enchant.Sprite, {
     initialize: function(x, y){
         enchant.Sprite.call(this, 16, 16);
-        this.image = game.assets['graphic.png'];
-        this.x = x; this.y = y; this.frame = 0;
+        this.image = game.assets['jiki.png']; 
+        this.x = x; this.y = y; this.frame = 0;   
           //自機の操作　タッチで移動する
         game.rootScene.addEventListener('touchstart',
                 function(e){ player.y = e.y; game.touched = true; });
         game.rootScene.addEventListener('touchend',
                 function(e){ player.y = e.y; game.touched = false; });
-        game.rootScene.addEventListener('touchmove', 
+        game.rootScene.addEventListener('touchmove',
                 function(e){ player.y = e.y; });
         
           game.rootScene.addEventListener('touchstart',
@@ -50,7 +50,7 @@ var Enemy = enchant.Class.create(enchant.Sprite, {
             }
             
               //自機への当たり判定
-            if(player.within(this, 20)){     //プレイヤーに当たったらゲームオーバー
+            if(player.within(this, 22)){     //プレイヤーに当たったらゲームオーバー
                      game.end(game.score, "SCORE: " + game.score)
                 }
         });
@@ -172,7 +172,7 @@ var Background = enchant.Class.create(enchant.Sprite,{
 window.onload = function() {
      //初期設定
     game = new Game(320, 320);
-    game.fps = 24; game.score = 0; game.touched = false; game.preload('graphic.png','bg.png','space1.png');
+    game.fps = 24; game.score = 0; game.touched = false; game.preload('graphic.png','bg.png','space1.png','jiki.png');
     game.onload = function() {
         background=new Background();//背景を出現させる
         player = new Player(0, 152);//プレイヤーを出現させる
