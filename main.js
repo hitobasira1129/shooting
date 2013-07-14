@@ -55,8 +55,8 @@ var Blast=enchant.Class.create(enchant.Sprite,{
 //敵のクラス(倒せない)
 var Enemy = enchant.Class.create(enchant.Sprite, {
     initialize: function(x, y, omega){
-        enchant.Sprite.call(this, 64, 64);
-        this.image = game.assets['space1.png'];
+        enchant.Sprite.call(this, 64, 34);
+        this.image = game.assets['space2.gif'];
         this.x = x; this.y = y; this.frame = 0; this.time = 0;
        
           this.omega = omega*Math.PI / 180; //ラジアン角に変換
@@ -163,6 +163,16 @@ var PlayerShoot = enchant.Class.create(Shoot, { //弾のクラスを継承
                     this.remove(); enemies[i].remove();
                     game.score += 100; //スコアを加算
                 }
+              
+            }
+            for(var i in materials){
+                if(materials[i].intersect(this)){
+                    //爆発させる
+                    var blast=new Blast(materials[i].x,materials[i].y)
+                    //当たっていたら敵を消去
+                    this.remove();
+                }
+              
             }
         });
     }
@@ -209,11 +219,12 @@ var Background = enchant.Class.create(enchant.Sprite,{
 window.onload = function() {
      //初期設定
     game = new Game(320, 320);
-    game.fps = 24; game.score = 0; game.touched = false; game.preload('graphic.png','bg.png','space1.png','jiki.png');
+    game.fps = 24; game.score = 0; game.touched = false; game.preload('graphic.png','bg.png','space2.gif','jiki.png');
     game.onload = function() {
         background=new Background();//背景を出現させる
         player = new Player(0, 152);//プレイヤーを出現させる
         enemies = [];
+        materials = [];
         game.rootScene.backgroundColor = 'black';
 
         game.rootScene.addEventListener('enterframe', function(){
@@ -222,7 +233,9 @@ window.onload = function() {
                     //ランダムに敵キャラを登場させる
                 var y = rand(320);
                 var omega = y < 160 ? 1 : -1;
-                var enemy = new Enemy(320, y, omega);
+                var material = new Enemy(320, y, omega);
+                material.key = game.frame;
+                    materials[game.frame] = material;
                 var enemy = new Enemy2(320, y, omega);
                 enemy.key = game.frame;
                     enemies[game.frame] = enemy;
